@@ -1,9 +1,10 @@
-package me.give_me_moneyz.deathmagic.client;
+package me.give_me_moneyz.deathmagic.client.events;
 
 import com.mojang.blaze3d.vertex.*;
-import me.give_me_moneyz.deathmagic.DeathMagic;
+import me.give_me_moneyz.deathmagic.client.network.ClientDeadEntityTracker;
 import me.give_me_moneyz.deathmagic.client.utils.ClientUtils;
 import net.minecraft.client.Minecraft;
+import net.minecraft.core.BlockPos;
 import net.minecraft.util.Mth;
 import net.minecraft.world.phys.Vec3;
 import net.neoforged.api.distmarker.Dist;
@@ -17,7 +18,6 @@ public class ClientRenderHandler {
     @SubscribeEvent
     public static void onRender(RenderLevelStageEvent event) {
         if (event.getStage() != RenderLevelStageEvent.Stage.AFTER_PARTICLES) return;
-        DeathMagic.LOGGER.debug("we rendering up in this jawn");
         PoseStack stack = ClientUtils.setupPoseStack(event);
         double rho = 1;
         assert Minecraft.getInstance().player != null && Minecraft.getInstance().cameraEntity != null;
@@ -26,6 +26,8 @@ public class ClientRenderHandler {
         Vec3 playervec = Minecraft.getInstance().cameraEntity
                 .getEyePosition(event.getPartialTick())
                 .add(rho * Mth.sin(phi) * Mth.cos(theta), rho * Mth.cos(phi) - 0.35F, rho * Mth.sin(phi) * Mth.sin(theta));
-        ClientUtils.drawLine(stack, playervec, new Vec3(9, 9, 9), 4f, 0F, 0.6F, 1F);
+        for (BlockPos blockPos: ClientDeadEntityTracker.getDeathPositions()) {
+            ClientUtils.drawLine(stack, playervec, blockPos.getCenter(), 4f, 0F, 0.6F, 1F);
+        }
     }
 }

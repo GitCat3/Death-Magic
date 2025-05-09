@@ -1,6 +1,7 @@
 package me.give_me_moneyz.deathmagic;
 
 import com.mojang.logging.LogUtils;
+import me.give_me_moneyz.deathmagic.common.network.MyNetwork;
 import net.neoforged.bus.api.IEventBus;
 import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.fml.ModLoadingContext;
@@ -21,6 +22,7 @@ public class DeathMagic
     {
         NeoForge.EVENT_BUS.register(this);
         ModLoadingContext.get().registerConfig(ModConfig.Type.COMMON, Config.SPEC);
+        MyNetwork.register();
     }
 
     @SubscribeEvent
