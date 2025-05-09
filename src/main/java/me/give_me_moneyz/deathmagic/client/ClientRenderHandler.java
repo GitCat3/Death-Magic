@@ -1,12 +1,9 @@
 package me.give_me_moneyz.deathmagic.client;
 
-import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.*;
 import me.give_me_moneyz.deathmagic.DeathMagic;
 import me.give_me_moneyz.deathmagic.client.utils.ClientUtils;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.player.LocalPlayer;
-import net.minecraft.client.renderer.GameRenderer;
 import net.minecraft.util.Mth;
 import net.minecraft.world.phys.Vec3;
 import net.neoforged.api.distmarker.Dist;
