@@ -24,9 +24,4 @@ public class DeathMagic
         ModLoadingContext.get().registerConfig(ModConfig.Type.COMMON, Config.SPEC);
         MyNetwork.register();
     }
-
-    @SubscribeEvent
-    public void onServerStarting(ServerStartingEvent event) {
-        LOGGER.debug("server starting here!");
-    }
 }
