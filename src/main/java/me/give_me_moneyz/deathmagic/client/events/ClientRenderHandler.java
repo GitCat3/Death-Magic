@@ -27,7 +27,7 @@ public class ClientRenderHandler {
                 .getEyePosition(event.getPartialTick())
                 .add(rho * Mth.sin(phi) * Mth.cos(theta), rho * Mth.cos(phi) - 0.35F, rho * Mth.sin(phi) * Mth.sin(theta));
         for (BlockPos blockPos: ClientDeadEntityTracker.getDeathPositions()) {
-            ClientUtils.drawLine(stack, playervec, blockPos.getCenter(), 4f, 0F, 0.6F, 1F);
+            ClientUtils.drawLine(stack, playervec, blockPos.getCenter(), 4f, 1F, 0F, 0F);
         }
     }
 }
