@@ -17,6 +17,8 @@ import static me.give_me_moneyz.deathmagic.DeathMagic.MODID;
 public class ClientRenderHandler {
     @SubscribeEvent
     public static void onRender(RenderLevelStageEvent event) {
+        // This function is adapted from Allomancy (https://github.com/legobmw99/Allomancy)
+        // Licensed under the GNU General Public License v3.0
         if (event.getStage() != RenderLevelStageEvent.Stage.AFTER_PARTICLES) return;
         PoseStack stack = ClientUtils.setupPoseStack(event);
         double rho = 1;

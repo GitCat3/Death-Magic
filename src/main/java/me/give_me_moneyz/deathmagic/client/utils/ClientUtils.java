@@ -9,6 +9,8 @@ import net.neoforged.neoforge.client.event.RenderLevelStageEvent;
 import org.joml.Matrix4f;
 
 public class ClientUtils {
+    // This function is adapted from Allomancy (https://github.com/legobmw99/Allomancy)
+    // Licensed under the GNU General Public License v3.0
     public static PoseStack setupPoseStack(final RenderLevelStageEvent event) {
         RenderSystem.setShader(GameRenderer::getRendertypeLinesShader);
         RenderSystem.disableDepthTest();
@@ -26,6 +28,8 @@ public class ClientUtils {
         return stack;
     }
 
+    // This function is adapted from Allomancy (https://github.com/legobmw99/Allomancy)
+    // Licensed under the GNU General Public License v3.0
     public static void drawLine(PoseStack stack, Vec3 player, Vec3 dest, float width, float r, float g, float b) {
 
         //        RenderSystem.lineWidth(width);
