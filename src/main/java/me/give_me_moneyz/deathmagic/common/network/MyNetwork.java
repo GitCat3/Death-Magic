@@ -19,10 +19,10 @@ public class MyNetwork {
     private static int packetId = 0;
 
     public static void register() {
-        CHANNEL.messageBuilder(EntityDeathPositionPacket.class, packetId++)
-                .encoder(EntityDeathPositionPacket::encode)
-                .decoder(EntityDeathPositionPacket::decode)
-                .consumerMainThread(EntityDeathPositionPacket::handle)
+        CHANNEL.messageBuilder(EntityDeathDataPacket.class, packetId++)
+                .encoder(EntityDeathDataPacket::encode)
+                .decoder(EntityDeathDataPacket::decode)
+                .consumerMainThread(EntityDeathDataPacket::handle)
                 .add();
     }
 }

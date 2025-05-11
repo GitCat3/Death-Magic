@@ -11,6 +11,7 @@ import net.neoforged.api.distmarker.Dist;
 import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.fml.common.Mod;
 import net.neoforged.neoforge.client.event.RenderLevelStageEvent;
+
 import static me.give_me_moneyz.deathmagic.DeathMagic.MODID;
 
 @Mod.EventBusSubscriber(modid = MODID, value = Dist.CLIENT, bus = Mod.EventBusSubscriber.Bus.FORGE)
@@ -28,7 +29,7 @@ public class ClientRenderHandler {
         Vec3 playervec = Minecraft.getInstance().cameraEntity
                 .getEyePosition(event.getPartialTick())
                 .add(rho * Mth.sin(phi) * Mth.cos(theta), rho * Mth.cos(phi) - 0.35F, rho * Mth.sin(phi) * Mth.sin(theta));
-        for (BlockPos blockPos: ClientDeadEntityTracker.getDeathPositions()) {
+        for (BlockPos blockPos : ClientDeadEntityTracker.getDeathPositions()) {
             ClientUtils.drawLine(stack, playervec, blockPos.getCenter(), 4f, 1F, 0F, 0F);
         }
     }

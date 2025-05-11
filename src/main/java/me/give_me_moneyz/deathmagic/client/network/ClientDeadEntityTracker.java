@@ -1,7 +1,6 @@
 package me.give_me_moneyz.deathmagic.client.network;
 
 import net.minecraft.core.BlockPos;
-
 import java.util.ArrayList;
 import java.util.List;
 

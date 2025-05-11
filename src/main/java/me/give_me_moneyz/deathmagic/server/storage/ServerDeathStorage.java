@@ -6,50 +6,53 @@ import net.minecraft.nbt.ListTag;
 import net.minecraft.nbt.Tag;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.level.saveddata.SavedData;
-import java.util.ArrayList;
-import java.util.List;
+import java.util.HashMap;
+import java.util.Iterator;
 
 public class ServerDeathStorage extends SavedData {
-    private final List<BlockPos> deathPositions = new ArrayList<>();
+    private final HashMap<BlockPos, Float> deathData = new HashMap<>();
 
-    public static final String DATA_NAME = "dead_entity_positions";
+    public static final String DATA_NAME = "dead_entity_data";
 
-    public void addDeath(BlockPos pos) {
-        deathPositions.add(pos);
+    public void addDeath(BlockPos pos, float health) {
+        deathData.put(pos, health);
         setDirty(); // Marks data as needing to be saved
     }
 
-    public List<BlockPos> getDeathPositions() {
-        return deathPositions;
+    public HashMap<BlockPos, Float> getDeaths() {
+        return deathData;
     }
 
     // Save to NBT
     @Override
     public CompoundTag save(CompoundTag tag) {
         ListTag list = new ListTag();
-        for (BlockPos pos : deathPositions) {
-            CompoundTag posTag = new CompoundTag();
-            posTag.putInt("x", pos.getX());
-            posTag.putInt("y", pos.getY());
-            posTag.putInt("z", pos.getZ());
-            list.add(posTag);
+        for (Iterator<BlockPos> it = deathData.keySet().iterator(); it.hasNext(); ) {
+            BlockPos pos = it.next();
+            CompoundTag dataTag = new CompoundTag();
+            dataTag.putInt("x", pos.getX());
+            dataTag.putInt("y", pos.getY());
+            dataTag.putInt("z", pos.getZ());
+            dataTag.putFloat("h", deathData.get(pos));
+            list.add(dataTag);
         }
-        tag.put("positions", list);
+        tag.put("deaddata", list);
         return tag;
     }
 
     // Load from NBT
     public static ServerDeathStorage load(CompoundTag tag) {
         ServerDeathStorage storage = new ServerDeathStorage();
-        ListTag list = tag.getList("positions", Tag.TAG_COMPOUND);
+        ListTag list = tag.getList("deaddata", Tag.TAG_COMPOUND);
         for (Tag item : list) {
-            CompoundTag posTag = (CompoundTag) item;
+            CompoundTag dataTag = (CompoundTag) item;
             BlockPos pos = new BlockPos(
-                    posTag.getInt("x"),
-                    posTag.getInt("y"),
-                    posTag.getInt("z")
+                    dataTag.getInt("x"),
+                    dataTag.getInt("y"),
+                    dataTag.getInt("z")
             );
-            storage.deathPositions.add(pos);
+            float health = dataTag.getFloat("h");
+            storage.deathData.put(pos, health);
         }
         return storage;
     }
