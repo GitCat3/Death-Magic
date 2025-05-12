@@ -20,15 +20,17 @@ public class EntityDeathEvent {
             ServerLevel level = (ServerLevel) event.getEntity().level();
             BlockPos pos = event.getEntity().blockPosition();
             float health = event.getEntity().getMaxHealth();
-            ServerDeathStorage deathStorage = ServerDeathStorage.get(level);
-            deathStorage.addDeath(pos, health);
+            if (health >= 20) {
+                ServerDeathStorage deathStorage = ServerDeathStorage.get(level);
+                deathStorage.addDeath(pos, health);
 
-            // Optionally send to online players
-            for (ServerPlayer player : level.players()) {
-                MyNetwork.CHANNEL.send(
-                        PacketDistributor.PLAYER.with(() -> player),
-                        new EntityDeathDataPacket(pos)
-                );
+                // Optionally send to online players
+                for (ServerPlayer player : level.players()) {
+                    MyNetwork.CHANNEL.send(
+                            PacketDistributor.PLAYER.with(() -> player),
+                            new EntityDeathDataPacket(pos)
+                    );
+                }
             }
         }
     }

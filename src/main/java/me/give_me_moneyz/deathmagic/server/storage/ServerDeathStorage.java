@@ -1,11 +1,16 @@
 package me.give_me_moneyz.deathmagic.server.storage;
 
+import me.give_me_moneyz.deathmagic.common.network.EntityDeathDataPacket;
+import me.give_me_moneyz.deathmagic.common.network.MyNetwork;
 import net.minecraft.core.BlockPos;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.ListTag;
 import net.minecraft.nbt.Tag;
 import net.minecraft.server.level.ServerLevel;
+import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.level.saveddata.SavedData;
+import net.neoforged.neoforge.network.PacketDistributor;
+
 import java.util.HashMap;
 import java.util.Iterator;
 
@@ -17,6 +22,14 @@ public class ServerDeathStorage extends SavedData {
     public void addDeath(BlockPos pos, float health) {
         deathData.put(pos, health);
         setDirty(); // Marks data as needing to be saved
+    }
+
+    public void changeDeathHealth(BlockPos pos, float newHealth) {
+        deathData.replace(pos, newHealth);
+        if (deathData.get(pos) <= 0) {
+            deathData.remove(pos);
+        }
+        setDirty();
     }
 
     public HashMap<BlockPos, Float> getDeaths() {
