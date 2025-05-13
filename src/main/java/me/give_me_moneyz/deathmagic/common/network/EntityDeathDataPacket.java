@@ -7,23 +7,24 @@ import net.neoforged.neoforge.network.NetworkEvent;
 
 public class EntityDeathDataPacket {
     private final BlockPos position;
+    private final boolean isRemoving;
 
-    public EntityDeathDataPacket(BlockPos position) {
+    public EntityDeathDataPacket(BlockPos position, boolean isRemoving) {
         this.position = position;
+        this.isRemoving = isRemoving;
     }
 
     public static void encode(EntityDeathDataPacket pkt, FriendlyByteBuf buf) {
         buf.writeBlockPos(pkt.position);
+        buf.writeBoolean(pkt.isRemoving);
     }
 
     public static EntityDeathDataPacket decode(FriendlyByteBuf buf) {
-        return new EntityDeathDataPacket(buf.readBlockPos());
+        return new EntityDeathDataPacket(buf.readBlockPos(), buf.readBoolean());
     }
 
     public static void handle(EntityDeathDataPacket pkt, NetworkEvent.Context ctx) {
-        ctx.enqueueWork(() -> {
-            ClientDeadEntityTracker.addDeathPosition(pkt.position);
-        });
+        ctx.enqueueWork(() -> ClientDeadEntityTracker.modifyDeathPositions(pkt.position, pkt.isRemoving));
         ctx.setPacketHandled(true);
     }
 }

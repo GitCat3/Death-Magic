@@ -21,7 +21,7 @@ public class PlayerJoinEvent {
             for (BlockPos pos : storage.getDeaths().keySet()) {
                 MyNetwork.CHANNEL.send(
                         PacketDistributor.PLAYER.with(() -> player),
-                        new EntityDeathDataPacket(pos)
+                        new EntityDeathDataPacket(pos, false)
                 );
             }
         }

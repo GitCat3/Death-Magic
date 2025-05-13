@@ -28,7 +28,7 @@ public class EntityDeathEvent {
                 for (ServerPlayer player : level.players()) {
                     MyNetwork.CHANNEL.send(
                             PacketDistributor.PLAYER.with(() -> player),
-                            new EntityDeathDataPacket(pos)
+                            new EntityDeathDataPacket(pos, false)
                     );
                 }
             }

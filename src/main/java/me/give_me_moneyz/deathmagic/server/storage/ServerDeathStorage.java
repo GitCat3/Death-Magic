@@ -12,46 +12,10 @@ import net.minecraft.world.level.saveddata.SavedData;
 import net.neoforged.neoforge.network.PacketDistributor;
 
 import java.util.HashMap;
-import java.util.Iterator;
 
 public class ServerDeathStorage extends SavedData {
-    private final HashMap<BlockPos, Float> deathData = new HashMap<>();
-
     public static final String DATA_NAME = "dead_entity_data";
-
-    public void addDeath(BlockPos pos, float health) {
-        deathData.put(pos, health);
-        setDirty(); // Marks data as needing to be saved
-    }
-
-    public void changeDeathHealth(BlockPos pos, float newHealth) {
-        deathData.replace(pos, newHealth);
-        if (deathData.get(pos) <= 0) {
-            deathData.remove(pos);
-        }
-        setDirty();
-    }
-
-    public HashMap<BlockPos, Float> getDeaths() {
-        return deathData;
-    }
-
-    // Save to NBT
-    @Override
-    public CompoundTag save(CompoundTag tag) {
-        ListTag list = new ListTag();
-        for (Iterator<BlockPos> it = deathData.keySet().iterator(); it.hasNext(); ) {
-            BlockPos pos = it.next();
-            CompoundTag dataTag = new CompoundTag();
-            dataTag.putInt("x", pos.getX());
-            dataTag.putInt("y", pos.getY());
-            dataTag.putInt("z", pos.getZ());
-            dataTag.putFloat("h", deathData.get(pos));
-            list.add(dataTag);
-        }
-        tag.put("deaddata", list);
-        return tag;
-    }
+    private final HashMap<BlockPos, Float> deathData = new HashMap<>();
 
     // Load from NBT
     public static ServerDeathStorage load(CompoundTag tag) {
@@ -75,6 +39,42 @@ public class ServerDeathStorage extends SavedData {
                 new SavedData.Factory<>(ServerDeathStorage::new, ServerDeathStorage::load),
                 DATA_NAME
         );
+    }
+
+    public void addDeath(BlockPos pos, float health) {
+        deathData.put(pos, health);
+        setDirty(); // Marks data as needing to be saved
+    }
+
+    public void changeDeathHealth(BlockPos pos, float newHealth, ServerLevel level) {
+        deathData.replace(pos, newHealth);
+        if (deathData.get(pos) <= 0.1) {
+            deathData.remove(pos);
+            for (ServerPlayer player : level.players()) {
+                MyNetwork.CHANNEL.send(PacketDistributor.PLAYER.with(() -> player), new EntityDeathDataPacket(pos, true));
+            }
+        }
+        setDirty();
+    }
+
+    public HashMap<BlockPos, Float> getDeaths() {
+        return deathData;
+    }
+
+    // Save to NBT
+    @Override
+    public CompoundTag save(CompoundTag tag) {
+        ListTag list = new ListTag();
+        for (BlockPos pos : deathData.keySet()) {
+            CompoundTag dataTag = new CompoundTag();
+            dataTag.putInt("x", pos.getX());
+            dataTag.putInt("y", pos.getY());
+            dataTag.putInt("z", pos.getZ());
+            dataTag.putFloat("h", deathData.get(pos));
+            list.add(dataTag);
+        }
+        tag.put("deaddata", list);
+        return tag;
     }
 
 }

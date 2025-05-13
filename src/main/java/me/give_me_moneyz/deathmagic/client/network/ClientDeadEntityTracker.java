@@ -7,8 +7,13 @@ import java.util.List;
 public class ClientDeadEntityTracker {
     private static final List<BlockPos> deathPositions = new ArrayList<>();
 
-    public static void addDeathPosition(BlockPos pos) {
-        deathPositions.add(pos);
+    public static void modifyDeathPositions(BlockPos pos, boolean isRemoving) {
+        if (isRemoving) {
+            deathPositions.remove(pos);
+        }
+        else {
+            deathPositions.add(pos);
+        }
     }
 
     public static List<BlockPos> getDeathPositions() {
